@@ -8,10 +8,12 @@ type DiaryEntry = {
   title: string;
   content: string;
   date: string;
+  mood: string;
 };
 
 export default function DiaryPage() {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
+  const [filterMood, setFilterMood] = useState("");
 
   useEffect(() => {
     // Ambil data dari localStorage
@@ -20,6 +22,10 @@ export default function DiaryPage() {
       setEntries(JSON.parse(saved));
     }
   }, []);
+
+  const filteredEntries = filterMood
+    ? entries.filter((e) => e.mood === filterMood)
+    : entries;
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -33,18 +39,36 @@ export default function DiaryPage() {
         ➕ Tambah Catatan
       </Link>
 
+      {/* Filter mood */}
+      <div className="mb-6">
+        <label className="mr-2 font-medium">Filter Mood:</label>
+        <select
+          value={filterMood}
+          onChange={(e) => setFilterMood(e.target.value)}
+          className="p-2 border rounded-xl"
+        >
+          <option value="">Semua</option>
+          <option value="😊">😊 Senang</option>
+          <option value="😐">😐 Biasa</option>
+          <option value="😔">😔 Sedih</option>
+          <option value="😡">😡 Marah</option>
+        </select>
+      </div>
+
       {/* List catatan */}
-      {entries.length === 0 ? (
+      {filteredEntries.length === 0 ? (
         <p className="text-gray-500">Belum ada catatan.</p>
       ) : (
         <div className="space-y-4">
-          {entries.map((entry) => (
+          {filteredEntries.map((entry) => (
             <Link
               key={entry.id}
               href={`/diary/${entry.id}`}
               className="block p-4 border rounded-xl shadow hover:bg-gray-50"
             >
-              <h2 className="text-lg font-semibold">{entry.title}</h2>
+              <h2 className="text-lg font-semibold">
+                {entry.title} <span className="ml-2">{entry.mood}</span>
+              </h2>
               <p className="text-sm text-gray-600">{entry.date}</p>
               <p className="mt-1 text-gray-700 line-clamp-2">{entry.content}</p>
             </Link>
@@ -53,4 +77,4 @@ export default function DiaryPage() {
       )}
     </div>
   );
-} 
+}
