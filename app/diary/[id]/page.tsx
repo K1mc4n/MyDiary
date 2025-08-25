@@ -8,6 +8,7 @@ type DiaryEntry = {
   title: string;
   content: string;
   date: string;
+  mood: string;
 };
 
 export default function DiaryDetailPage() {
@@ -18,6 +19,7 @@ export default function DiaryDetailPage() {
   const [entry, setEntry] = useState<DiaryEntry | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [mood, setMood] = useState("😊");
 
   // Ambil catatan berdasarkan ID
   useEffect(() => {
@@ -29,6 +31,7 @@ export default function DiaryDetailPage() {
         setEntry(found);
         setTitle(found.title);
         setContent(found.content);
+        setMood(found.mood);
       }
     }
   }, [id]);
@@ -41,7 +44,7 @@ export default function DiaryDetailPage() {
     if (saved) {
       let entries: DiaryEntry[] = JSON.parse(saved);
       entries = entries.map((e) =>
-        e.id === id ? { ...e, title, content } : e
+        e.id === id ? { ...e, title, content, mood } : e
       );
       localStorage.setItem("diaryEntries", JSON.stringify(entries));
       router.push("/diary");
@@ -92,6 +95,20 @@ export default function DiaryDetailPage() {
             required
             className="w-full p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Mood</label>
+          <select
+            value={mood}
+            onChange={(e) => setMood(e.target.value)}
+            className="w-full p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="😊">😊 Senang</option>
+            <option value="😐">😐 Biasa</option>
+            <option value="😔">😔 Sedih</option>
+            <option value="😡">😡 Marah</option>
+          </select>
         </div>
 
         <div className="flex gap-4">
