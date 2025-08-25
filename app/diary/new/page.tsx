@@ -7,6 +7,7 @@ export default function NewDiaryPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [mood, setMood] = useState("😊");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +21,7 @@ export default function NewDiaryPage() {
       id: Date.now().toString(),
       title,
       content,
+      mood,
       date: new Date().toLocaleDateString("id-ID", {
         day: "2-digit",
         month: "long",
@@ -60,6 +62,20 @@ export default function NewDiaryPage() {
             required
             className="w-full p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium">Mood</label>
+          <select
+            value={mood}
+            onChange={(e) => setMood(e.target.value)}
+            className="w-full p-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="😊">😊 Senang</option>
+            <option value="😐">😐 Biasa</option>
+            <option value="😔">😔 Sedih</option>
+            <option value="😡">😡 Marah</option>
+          </select>
         </div>
 
         <button
